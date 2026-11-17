@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sweet Planet | 关卡编辑</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E🍩%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/src/editor.css">
+</head>
+<body>
+  <header><div><strong>甜甜星球</strong><span>第一关 / 关卡对象编辑</span></div><div class="actions"><a href="/scene-editor.html">3D 场景装饰 ↗</a><button id="rebalance-candies">重排路线糖果</button><button id="optimize">优化环境布局</button><button id="reset">恢复默认</button><button id="save" class="primary">保存布局</button><a href="/" target="_blank">打开游戏 ↗</a></div></header>
+  <main>
+    <aside><div class="section-title">关卡对象 <span id="count"></span></div><input id="search" type="search" placeholder="搜索出生点、平台、果冻、糖果等" aria-label="搜索对象"><div id="list"></div></aside>
+    <section class="workspace"><div class="map-head"><div><strong>关卡俯视图</strong><span>拖动平台移动 · 拖动白色方块调整大小</span></div><div class="zoom"><button id="zoom-out" title="缩小" aria-label="缩小">−</button><span id="zoom-label"></span><button id="zoom-in" title="放大" aria-label="放大">+</button><button id="fit" title="显示全部">全图</button></div></div><div id="viewport"><canvas id="map"></canvas></div><div class="legend"><span><i class="fixed"></i>固定平台</span><span><i class="moving"></i>移动平台</span><span><i class="drop"></i>塌落平台</span><span><i class="enemy"></i>果冻初始位置</span></div></section>
+    <aside class="inspector"><div class="section-title">对象属性</div><div class="object-actions"><button id="copy" title="Ctrl+C">复制</button><button id="paste" title="Ctrl+V">粘贴</button><button id="delete" title="Delete">删除</button><button id="undo" title="Ctrl+Z">撤销</button></div><h2 id="name"></h2><p id="kind"></p><div class="fields"><label>左右位置 X<input type="number" step="0.1" data-field="x"></label><label>高度 Y<input type="number" step="0.1" data-field="y"></label><label>前后位置 Z<input type="number" step="0.1" data-field="z"></label><label>宽度<input type="number" min="1" max="100" step="0.1" data-field="w"></label><label>深度<input type="number" min="1" max="100" step="0.1" data-field="d"></label></div><button id="restore">恢复此对象</button><p class="note">先选择左侧对象，再拖动位置或输入参数。高度 Y 是对象所在位置的高度。兔子出生点和泉水装饰可分别选择并移动。果冻移动会保留边缘安全距离；选中果冻可查看活动范围。已有布局可点“优化环境布局”更新糖杖、滑梯糖果和果冻范围，支持撤销。保存后刷新游戏生效。移动平台后请检查棉花糖、糖果及其他对象是否需要同步调整。</p><div id="status" role="status"></div></aside>
+  </main>
+  <script type="module" src="/src/editor.js"></script>
+</body></html>

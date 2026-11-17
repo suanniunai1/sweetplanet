@@ -1,0 +1,31 @@
+# Dependencies and generated output
+node_modules/
+dist/
+coverage/
+artifacts/
+output/
+tmp/
+backups/
+references/
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+.workbuddy/
+.codex/
+.vscode/
+.idea/
+
+# Recordings, reports, archives and temporary files
+*.log
+*.bak
+*.tmp
+*.zip
+*.tgz
+*.mp4
+*.webm
+*.docx
+*.pdf
+Thumbs.db
+.DS_Store

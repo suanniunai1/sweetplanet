@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>甜甜星球 · 3D 场景编辑器</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E🍩%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/src/editor/scene-editor.css">
+  <script type="importmap">{"imports":{"three":"/assets/characters/vanilla-coconut-bunny/v002/preview/vendor/three.module.js","three/addons/":"/assets/characters/vanilla-coconut-bunny/v002/preview/vendor/","/assets/characters/vanilla-coconut-bunny/v002/preview/utils/BufferGeometryUtils.js":"/assets/characters/vanilla-coconut-bunny/v002/preview/vendor/BufferGeometryUtils.js"}}</script>
+</head>
+<body>
+  <header class="app-header">
+    <a class="brand" href="/scene-editor.html"><span class="brand-symbol">✦</span><span>甜甜星球<small>WORLD STUDIO · 第一关</small></span></a>
+    <nav aria-label="编辑模式"><a class="current" href="/scene-editor.html">3D 场景</a><a href="/editor.html">更多玩法设置 ↗</a></nav>
+    <div class="header-actions"><span id="save-state" class="save-state">读取布局中</span><button id="undo" title="撤销 Ctrl+Z" disabled>↶ 撤销</button><button id="redo" title="重做 Ctrl+Shift+Z" disabled>↷</button><button id="save" class="primary" disabled>保存布局</button><button id="play" disabled>保存并试玩 ↗</button></div>
+  </header>
+  <main class="editor-grid">
+    <aside class="library" aria-label="场景对象">
+      <div class="panel-heading"><div><span class="eyebrow">SCENE COLLECTION</span><h1>场景对象 <span id="count">—</span></h1></div></div>
+      <div class="library-tools"><input id="search" type="search" placeholder="搜索踏板、城堡、甜甜圈…" aria-label="搜索场景装饰"><select id="category" aria-label="筛选装饰类型"><option value="all">全部类型</option><option value="platform">跳跃踏板</option><option value="landmark">城堡与地标</option><option value="island">浮空岛</option><option value="tree">糖果树</option><option value="sweet">漂浮甜品</option><option value="garden">花园与边饰</option><option value="sky">云朵与天空</option><option value="other">其他装饰</option></select></div>
+      <div id="asset-list" class="asset-list" role="listbox" aria-label="可编辑装饰"></div>
+      <div class="library-bottom"><button id="paste" disabled title="Ctrl+V">粘贴对象 Ctrl+V</button><label for="template">添加已有对象</label><div class="add-row"><select id="template" aria-label="装饰模板" disabled></select><button id="add" disabled title="在当前视图中心添加一个副本">＋</button></div><p>单击选择 · 双击聚焦<br>树与底座、岛与岛上甜品成组调整</p><div class="file-actions"><button id="export" disabled>导出 JSON</button><button id="import" disabled>导入 JSON</button><input id="file" type="file" accept=".json,application/json" hidden></div><button id="reset-all" class="text-button" disabled>恢复全部场景装饰</button></div>
+    </aside>
+    <section class="workspace" aria-label="3D 编辑视图">
+      <div class="navigation-toolbar" aria-label="观察视角工具">
+        <div role="group" aria-label="鼠标左键操作"><button data-navigation="pan" aria-pressed="false" title="左键拖动画面 H">✋ 拖动画面 <kbd>H</kbd></button><button data-navigation="orbit" aria-pressed="false" title="左键拖动环绕查看">⟳ 环绕视角</button><button data-navigation="edit" class="active" aria-pressed="true" title="拖模型编辑，拖空白平移视角">↗ 编辑资产</button></div>
+        <div class="camera-zoom" role="group" aria-label="视角远近"><button id="camera-out" title="拉远视角" aria-label="拉远视角">−</button><span>视角</span><button id="camera-in" title="拉近视角" aria-label="拉近视角">＋</button></div>
+        <span id="navigation-help">拖模型移动资产 · 拖空白移动视角 · R 整体缩放</span>
+      </div>
+      <div class="viewport-toolbar">
+        <div class="tool-group" role="group" aria-label="资产操作"><button data-mode="move" class="active" title="直接拖动整个资产 W">↗ 移动资产 <kbd>W</kbd></button><button data-mode="rotate" title="旋转资产 E">⟳ 旋转资产 <kbd>E</kbd></button><button data-mode="scale" title="上下拖模型整体等比缩放 R">⤢ 整体缩放 <kbd>R</kbd></button></div>
+        <label class="snap-control"><input id="snap" type="checkbox">吸附 <select id="snap-step" aria-label="吸附步长"><option value="0.5">0.5</option><option value="0.1">0.1</option><option value="1">1</option><option value="2">2</option></select></label>
+        <div class="view-tools"><button id="focus" title="聚焦选中对象 F" disabled>聚焦</button><button id="overview">全景</button><button id="view-3d" class="active">3D</button><button id="view-top">俯视</button></div>
+      </div>
+      <div class="placement-toolbar">
+        <label>直接拖模型 <select id="drag-space" aria-label="模型拖动方式"><option value="screen">跟随画面</option><option value="ground">水平摆放（高度不变）</option><option value="height">只改高度</option></select></label>
+        <div class="quick-size" role="group" aria-label="选中资产整体大小"><span>整体大小</span><button id="size-down" disabled title="缩小到当前的 80%">−</button><label><input id="size-percent" type="number" min="1" max="2000" step="5" disabled aria-label="相对原始尺寸的百分比">%</label><button id="size-up" disabled title="放大到当前的 125%">＋</button></div>
+      </div>
+      <div id="viewport" tabindex="0" aria-label="拖模型移动资产，拖空白移动视角；整体缩放可上下拖模型改变大小；空格加左键随时平移，滚轮拉近视角">
+        <div class="viewport-badge"><i></i><span id="view-label">透视 · 世界坐标</span></div>
+        <div class="viewport-options"><label><input id="grid" type="checkbox">地面网格</label><label><input id="colliders" type="checkbox">平台边界</label><label><input id="animate" type="checkbox">动态预览</label><button id="spawn-view" title="查看出生点附近的游戏构图">出生点视角</button></div>
+        <div id="loading" class="loading"><span class="loading-orbit">✦</span><strong id="loading-title">正在装入甜品世界</strong><p id="loading-detail">复用游戏里的模型与材质，请稍候…</p></div>
+        <div id="selection-caption" class="selection-caption" hidden></div>
+      </div>
+      <div class="viewport-footer"><span>H 拖动画面 · 空格+左键随时平移 · 右键环视 · 滚轮拉近 · 双击模型聚焦</span><span id="render-stats">按需渲染</span></div>
+    </section>
+    <aside class="inspector" aria-label="装饰属性">
+      <div class="panel-heading"><span class="eyebrow">OBJECT PROPERTIES</span><h2>对象属性</h2></div>
+      <div id="empty-selection" class="empty-selection">在画面或左侧列表中选择一个装饰，开始布置你的甜品世界。</div>
+      <div id="properties" hidden>
+        <div class="selected-heading"><span id="object-category" class="type-chip"></span><span id="object-lock"></span></div>
+        <label class="name-label">装饰名称<input id="object-name" maxlength="80" aria-label="装饰名称"></label><code id="object-id"></code>
+        <div class="object-actions"><button id="copy" title="Ctrl+C">复制</button><button id="duplicate" title="Ctrl+D">快速副本</button><button id="delete" title="Delete">删除</button><button id="restore">恢复此对象</button></div>
+        <fieldset><legend>位置 <small>世界坐标 · 踏板以顶面中心为准</small></legend><div class="triple"><label class="axis-x">X<input data-field="x" type="number" step="0.1" min="-1000" max="1000"></label><label class="axis-y">Y<input data-field="y" type="number" step="0.1" min="-1000" max="1000"></label><label class="axis-z">Z<input data-field="z" type="number" step="0.1" min="-1000" max="1000"></label></div></fieldset>
+        <fieldset id="rotation-fields"><legend>旋转 <small>相对模型原始方向 · °</small></legend><div class="triple"><label class="axis-x">X<input data-field="rotationX" type="number" step="1" min="-3600" max="3600"></label><label class="axis-y">Y<input data-field="rotationY" type="number" step="1" min="-3600" max="3600"></label><label class="axis-z">Z<input data-field="rotationZ" type="number" step="1" min="-3600" max="3600"></label></div></fieldset>
+        <fieldset id="scenery-size"><legend>大小 <small>1 = 当前美术原始尺寸</small></legend><label class="scale-main">等比缩放<input data-field="scale" type="number" step="0.05" min="0.05" max="20"></label><label class="check-row"><input id="independent" type="checkbox">独立调整 X / Y / Z（会改变比例）</label><div class="triple" id="axis-scales" hidden><label class="axis-x">X 倍率<input data-field="scaleX" type="number" step="0.05" min="0.05" max="20"></label><label class="axis-y">Y 倍率<input data-field="scaleY" type="number" step="0.05" min="0.05" max="20"></label><label class="axis-z">Z 倍率<input data-field="scaleZ" type="number" step="0.05" min="0.05" max="20"></label></div><p id="dimensions" class="dimensions"></p></fieldset>
+        <fieldset id="platform-size" hidden><legend>踏板尺寸 <small>与游戏碰撞范围同步</small></legend><div class="triple"><label class="axis-x">宽度 X<input data-field="w" type="number" step="0.1" min="0.1" max="100"></label><label class="axis-z">进深 Z<input data-field="d" type="number" step="0.1" min="0.1" max="100"></label></div><label class="check-row"><input id="platform-independent" type="checkbox">拖动缩放轴时只调整宽度或进深</label><p class="dimensions">Y 是可站立的顶面高度；蛋糕厚度保持一致。</p></fieldset><fieldset class="flags"><legend>显示与行为</legend><label><input data-field="visible" type="checkbox">在游戏中显示</label><label><input data-field="animate" type="checkbox">保留原有漂浮动画</label><label><input data-field="locked" type="checkbox">锁定，防止误拖动</label></fieldset>
+        <p class="inspector-note">踏板支持移动、调整宽度和进深、复制粘贴；已有原始踏板保留删除保护。出生点与机关参数可在「更多玩法设置」编辑。<br>保存后刷新游戏生效；JSON 可备份或迁移布置。</p>
+      </div>
+    </aside>
+  </main>
+  <footer class="app-footer"><span id="status" role="status">准备编辑器…</span><span>Ctrl+S 保存 · Ctrl+C / V 复制粘贴 · Ctrl+D 副本 · Ctrl+Z 撤销 · F 聚焦</span></footer>
+  <script type="module" src="/src/editor/scene-editor.js"></script>
+</body>
+</html>

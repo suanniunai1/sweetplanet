@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SweetPlanet · 第二关 巧克力工厂峡谷</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E🍫%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="/src/style.css"><link rel="stylesheet" href="/src/level02.css">
+<script type="importmap">{"imports":{"three":"/assets/characters/vanilla-coconut-bunny/v002/preview/vendor/three.module.js","three/addons/":"/assets/characters/vanilla-coconut-bunny/v002/preview/vendor/","/assets/characters/vanilla-coconut-bunny/v002/preview/utils/BufferGeometryUtils.js":"/assets/characters/vanilla-coconut-bunny/v002/preview/vendor/BufferGeometryUtils.js"}}</script></head>
+<body class="level02">
+<main id="game" aria-label="SweetPlanet 第二关 巧克力工厂峡谷"></main>
+<header class="top"><div class="brand"><span class="brand-icon">✦</span><div>SWEET PLANET<small>甜甜星球 · 糖果大冒险</small></div></div><div class="scene-tag"><i></i> 第二关 <span>02</span><button id="audio-toggle" type="button" aria-label="关闭音乐与音效" aria-pressed="false">♫</button></div></header>
+<section class="vitals"><div class="eyebrow">椰蓉香草蛋糕兔</div><div id="health" aria-label="生命值三格">♥ ♥ ♥</div><span id="movement">准备出发</span><div class="stats"><span>分数 <b id="score">0</b></span><span>星星 <b id="star-count">0</b></span><span id="timer">00:00</span></div><div id="hurt-state" role="status"></div></section>
+<section id="candy-counter" class="candy-wallet" aria-label="已收集 0 个糖果和甜品">
+  <div class="candy-emblem" aria-hidden="true"><svg viewBox="0 0 88 68" width="74" height="58"><defs><linearGradient id="sweet-pink" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffafd1"/><stop offset="1" stop-color="#cc63a1"/></linearGradient><linearGradient id="sweet-mint"><stop stop-color="#b5eee4"/><stop offset="1" stop-color="#71bfb8"/></linearGradient></defs><g transform="rotate(-18 44 34)"><path d="M27 26 9 15 12 34 9 50 28 42M61 26 79 15 76 34 79 50 60 42" fill="url(#sweet-mint)" stroke="#fff" stroke-width="2"/><rect x="24" y="16" width="40" height="36" rx="17" fill="url(#sweet-pink)" stroke="#fff4fb" stroke-width="2"/><path d="M39 18q-8 16 0 32M50 18q-8 16 0 32" fill="none" stroke="#fff0f5" stroke-width="5"/><ellipse cx="32" cy="24" rx="5" ry="2" fill="#fff" opacity=".65"/></g><path d="m72 4 2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#e8b560"/></svg></div>
+  <div class="wallet-copy"><span>甜蜜收藏</span><div class="wallet-number"><b id="candy-count">00</b><small>颗</small></div></div><span id="candy-gain" aria-hidden="true"></span>
+</section>
+<section class="guide"><div class="eyebrow">LEVEL 02 / CHOCOLATE CANYON</div><h1>巧克力工厂峡谷。</h1><p>滚球闸门 → 逆流传送带 → 缆车 → 峡谷喷泉 → Shift 滑翔</p><div class="route"><span id="route-progress">00 / 06</span><div><i id="route-bar"></i></div><small>看清预警，抓住空档</small><p id="enemy-state" role="status">本关无敌人 · 留意机关预警</p></div></section>
+<div id="damage-flash" aria-hidden="true"></div>
+<div id="tutorial-tip" role="status"></div>
+  <div id="notice" role="status">正在准备巧克力峡谷…</div>
+<footer><div class="key-group"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><span>移动</span></div><div class="key-group"><kbd>Space</kbd><span id="jump-hint">跳跃 / 二段跳</span></div><div class="key-group"><kbd>Shift</kbd><span>空中按住滑翔，跟随彩虹航线</span></div><div class="key-group"><span class="mouse-icon">◉</span><span>右键拖动旋转 · 滚轮缩放</span></div><div class="key-group"><kbd>Esc</kbd><span>暂停</span></div><button id="reset" title="返回出生点，不恢复生命">回到起点 ↺</button></footer>
+<div class="telemetry"><span id="fps">— FPS</span><span>DESKTOP PROTOTYPE · LEVEL 02</span></div>
+<div id="overlay"><div class="overlay-card"><div class="eyebrow">SWEET PLANET</div><h2 id="overlay-title">第二关 · 巧克力工厂峡谷</h2><p id="overlay-description">正在加载你选定的兔子模型与原始材质…</p><button id="resume" disabled>正在加载…</button><small>桌面键鼠 · WASD + Space + Shift · 滑翔 · 无需锁定鼠标 · <a href="/">回到第一关</a></small></div></div>
+<script>
+// Keep this check inline: file:// cannot reliably load module scripts or GLB assets.
+const title = document.querySelector('#overlay-title');
+const description = document.querySelector('#overlay-description');
+const button = document.querySelector('#resume');
+if (location.protocol === 'file:') {
+  document.head.insertAdjacentHTML('beforeend', '<style>body{font:18px system-ui;background:#3a2318;color:#f3e6d0}body> :not(#overlay){display:none!important}#overlay{max-width:620px;margin:12vh auto;padding:32px;background:#5a3a28;border-radius:24px}button{padding:12px 20px;cursor:pointer}small{display:block;margin-top:20px}</style>');
+  title.textContent = '请通过本地服务打开游戏';
+  description.textContent = '直接双击 level02.html 无法加载 3D 游戏。请先双击项目文件夹中的“启动SweetPlanet.cmd”，再打开 http://127.0.0.1:5189/level02.html。服务窗口需要保持打开。';
+  button.disabled = false;
+  button.textContent = '打开本地游戏 →';
+  button.onclick = () => location.href = 'http://127.0.0.1:5189/level02.html';
+} else {
+  import('./src/main-level02.js').catch(error => {
+    console.error('SweetPlanet Level 2 startup failed:', error);
+    title.textContent = '游戏启动失败';
+    description.textContent = '脚本、资源加载或 WebGL 初始化失败。请使用 Chrome/Edge 打开 http://127.0.0.1:5189/level02.html，并确认本地服务窗口仍在运行。错误：' + error.message;
+    button.disabled = false;
+    button.textContent = '重新加载';
+    button.onclick = () => location.reload();
+  });
+}
+</script>
+</body></html>
+

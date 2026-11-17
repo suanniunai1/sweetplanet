@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SweetPlanet · 第一关连续冒险</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E🐰%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="/src/style.css">
+<script type="importmap">{"imports":{"three":"/assets/characters/vanilla-coconut-bunny/v002/preview/vendor/three.module.js","three/addons/":"/assets/characters/vanilla-coconut-bunny/v002/preview/vendor/","/assets/characters/vanilla-coconut-bunny/v002/preview/utils/BufferGeometryUtils.js":"/assets/characters/vanilla-coconut-bunny/v002/preview/vendor/BufferGeometryUtils.js"}}</script></head>
+<body class="overlay-open opening-menu">
+<main id="game" aria-label="SweetPlanet 第三人称糖果冒险"></main>
+<header class="top"><div class="brand"><span class="brand-icon">✦</span><div>SWEET PLANET<small>甜甜星球 · 糖果大冒险</small></div></div><div class="scene-tag"><i></i> 核心玩法测试 <span>02</span><button id="audio-toggle" type="button" aria-label="关闭音乐与音效" aria-pressed="false">♫</button></div></header>
+<section class="vitals"><div class="eyebrow">椰蓉香草蛋糕兔</div><div id="health" aria-label="生命值三格">♥ ♥ ♥</div><span id="movement">准备出发</span><div class="stats"><span>分数 <b id="score">0</b></span><span>星星 <b id="star-count">0</b></span><span id="timer">00:00</span></div><div id="hurt-state" role="status"></div></section>
+<section id="candy-counter" class="candy-wallet" aria-label="已收集 0 个糖果和甜品">
+  <div class="candy-emblem" aria-hidden="true"><svg viewBox="0 0 88 68" width="74" height="58"><defs><linearGradient id="sweet-pink" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffafd1"/><stop offset="1" stop-color="#cc63a1"/></linearGradient><linearGradient id="sweet-mint"><stop stop-color="#b5eee4"/><stop offset="1" stop-color="#71bfb8"/></linearGradient></defs><g transform="rotate(-18 44 34)"><path d="M27 26 9 15 12 34 9 50 28 42M61 26 79 15 76 34 79 50 60 42" fill="url(#sweet-mint)" stroke="#fff" stroke-width="2"/><rect x="24" y="16" width="40" height="36" rx="17" fill="url(#sweet-pink)" stroke="#fff4fb" stroke-width="2"/><path d="M39 18q-8 16 0 32M50 18q-8 16 0 32" fill="none" stroke="#fff0f5" stroke-width="5"/><ellipse cx="32" cy="24" rx="5" ry="2" fill="#fff" opacity=".65"/></g><path d="m72 4 2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#e8b560"/></svg></div>
+  <div class="wallet-copy"><span>甜蜜收藏</span><div class="wallet-number"><b id="candy-count">00</b><small>颗</small></div></div><span id="candy-gain" aria-hidden="true"></span>
+</section>
+<section class="guide"><div class="eyebrow">CANDY FOREST / PRACTICE</div><h1>跳出甜蜜新花样。</h1><p>前方收彩色糖果，左侧棉花糖弹射；右前方果冻会追击、蓄力跳扑；从顶部踩击可击败。</p><div class="route"><span id="route-progress">00 / 05</span><div><i id="route-bar"></i></div><small>原五级跳跃路线继续开放</small><p id="enemy-state" role="status">果冻：巡逻</p></div></section>
+<div id="damage-flash" aria-hidden="true"></div>
+<div id="prompt-stack" aria-live="polite">
+  <div id="tutorial-tip" role="status"></div>
+  <div id="notice" role="status"></div>
+</div>
+<footer><div class="key-group"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><span>移动</span></div><div class="key-group"><kbd>Space</kbd><span id="jump-hint">跳跃 / 再按二段跳</span></div><div class="key-group"><span class="mouse-icon">◉</span><span>右键拖动旋转 · 滚轮缩放</span></div><div class="key-group"><kbd>Esc</kbd><span>暂停</span></div><button id="reset" title="返回出生点，不恢复生命">回到起点 ↺</button></footer>
+<div class="telemetry"><span id="fps">— FPS</span><span>DESKTOP PROTOTYPE · v0.2</span></div>
+<div id="overlay"><div class="overlay-card"><div class="opening-art" aria-hidden="true"><span class="opening-sparkle">✦</span><span class="opening-orbit">✧</span><div class="opening-bunny"><svg viewBox="0 0 300 320" xmlns="http://www.w3.org/2000/svg" focusable="false">
+<defs><linearGradient id="bunny-cream" x1="0" y1="0" x2=".7" y2="1"><stop stop-color="#fffef1"/><stop offset="1" stop-color="#f3dfc4"/></linearGradient><linearGradient id="bunny-ear" x2="0" y2="1"><stop stop-color="#f5bad0"/><stop offset="1" stop-color="#e99bb8"/></linearGradient></defs>
+<ellipse cx="150" cy="297" rx="68" ry="10" fill="#a67d8b" opacity=".14"/>
+<g stroke="#dcbf9e" stroke-width="2.5"><ellipse cx="104" cy="91" rx="27" ry="77" transform="rotate(-9 104 91)" fill="url(#bunny-cream)"/><ellipse cx="196" cy="91" rx="27" ry="77" transform="rotate(9 196 91)" fill="url(#bunny-cream)"/></g>
+<ellipse cx="104" cy="91" rx="12" ry="55" transform="rotate(-9 104 91)" fill="url(#bunny-ear)"/><ellipse cx="196" cy="91" rx="12" ry="55" transform="rotate(9 196 91)" fill="url(#bunny-ear)"/>
+<ellipse cx="150" cy="272" rx="49" ry="29" fill="url(#bunny-cream)" stroke="#dcbf9e" stroke-width="2.5"/>
+<path d="M69 175Q60 151 84 145Q82 126 108 129Q125 110 145 126Q170 113 190 131Q215 123 218 149Q242 156 231 179Q256 210 231 231Q237 250 210 254Q190 281 167 270Q143 284 121 271Q91 278 81 254Q55 251 65 227Q45 201 69 175Z" fill="url(#bunny-cream)" stroke="#dcbf9e" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M129 136Q130 117 145 119Q139 102 154 99Q169 111 165 123Q184 122 177 139" fill="#fffdf0" stroke="#e4caab" stroke-width="2.5"/>
+<path d="M159 102Q164 88 173 88" fill="none" stroke="#668e68" stroke-width="4" stroke-linecap="round"/><ellipse cx="176" cy="88" rx="10" ry="4" transform="rotate(-20 176 88)" fill="#91b58b"/><circle cx="157" cy="108" r="12" fill="#d85e80"/><circle cx="153" cy="104" r="3" fill="#ffb7c7"/>
+<ellipse cx="92" cy="222" rx="17" ry="10" fill="#f0adc3" opacity=".65"/><ellipse cx="208" cy="222" rx="17" ry="10" fill="#f0adc3" opacity=".65"/>
+<ellipse cx="116" cy="199" rx="8" ry="12" fill="#59404b"/><ellipse cx="184" cy="199" rx="8" ry="12" fill="#59404b"/><circle cx="118" cy="195" r="2.6" fill="#fff"/><circle cx="186" cy="195" r="2.6" fill="#fff"/>
+<path d="M141 220Q150 214 159 220Q157 225 150 228Q143 225 141 220" fill="#d67f9a"/><path d="M150 228V234Q142 244 135 235M150 234Q158 244 165 235" fill="none" stroke="#805969" stroke-width="3.5" stroke-linecap="round"/>
+<path d="M149 271Q128 255 125 274Q128 288 149 278M151 271Q172 255 175 274Q172 288 151 278" fill="#9fcfbd" stroke="#76ae9a" stroke-width="1.5"/><circle cx="150" cy="274" r="5" fill="#83bba6"/>
+</svg></div><span class="opening-caption">A LITTLE ADVENTURE AWAITS</span></div><div class="opening-content"><div class="eyebrow">SWEET PLANET <span>· 甜甜星球</span></div><h2 id="overlay-title">甜甜星球 · 糖果大冒险</h2><p id="overlay-description">正在准备甜蜜冒险…</p><div class="opening-chapters"><div><span>01</span><b>糖果森林</b><small>跳跃 · 探索 · 彩虹滑道</small></div><div><span>02</span><b>巧克力峡谷</b><small>机关 · 缆车 · 甜品滑翔</small></div></div><div class="menu-controls"><div><kbd>W A S D</kbd><span>探索移动</span></div><div><kbd>Space</kbd><span>跳跃 · 空中再按连跳</span></div></div><button id="resume" disabled>正在加载…</button><div class="opening-direct"><a href="/level02.html">直接进入第二关 <span>↗</span></a></div><small class="menu-links"><span>桌面键鼠 · 无需锁定鼠标</span><span><a href="/prototype.html">光轨·01 原型</a><a href="/?scene=practice">练习场</a><a href="/scene-editor.html">场景编辑器 ↗</a></span></small></div></div></div>
+<script>
+// Keep this check inline: file:// cannot reliably load module scripts or GLB assets.
+const title = document.querySelector('#overlay-title');
+const description = document.querySelector('#overlay-description');
+const button = document.querySelector('#resume');
+if (location.protocol === 'file:') {
+  document.head.insertAdjacentHTML('beforeend', '<style>body{font:18px system-ui;background:#edf3f5;color:#49394f}body> :not(#overlay){display:none!important}#overlay{max-width:620px;margin:12vh auto;padding:32px;background:white;border-radius:24px}button{padding:12px 20px;cursor:pointer}small{display:block;margin-top:20px}</style>');
+  title.textContent = '请通过本地服务打开游戏';
+  description.textContent = '直接双击 index.html 无法加载 3D 游戏。请先双击项目文件夹中的“启动SweetPlanet.cmd”，再打开 http://127.0.0.1:5189/。服务窗口需要保持打开。';
+  button.disabled = false;
+  button.textContent = '打开本地游戏 →';
+  button.onclick = () => location.href = 'http://127.0.0.1:5189/';
+} else {
+  import('./src/main.js').catch(error => {
+    console.error('SweetPlanet startup failed:', error);
+    title.textContent = '游戏启动失败';
+    description.textContent = '脚本、资源加载或 WebGL 初始化失败。请使用 Chrome/Edge 打开 http://127.0.0.1:5189/，并确认本地服务窗口仍在运行。错误：' + error.message;
+    button.disabled = false;
+    button.textContent = '重新加载';
+    button.onclick = () => location.reload();
+  });
+}
+</script>
+</body></html>

@@ -1,0 +1,16 @@
+{
+  "name": "sweetplanet",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server.mjs",
+    "start": "node server.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "test:routes": "node tests/audit-routes.mjs"
+  },
+  "description": "SweetPlanet · 甜甜星球：浏览器 3D 甜品主题平台冒险游戏",
+  "engines": {
+    "node": ">=24.0.0"
+  }
+}
